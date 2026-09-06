@@ -1,0 +1,49 @@
+{
+  "expo": {
+    "name": "NeedGO",
+    "slug": "needgo",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "scheme": "needgo",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.needgo.app",
+      "infoPlist": {
+        "NSPhotoLibraryUsageDescription": "İlan fotoğraflarını seçmek için galeri erişimi gerekir."
+      }
+    },
+    "android": {
+      "package": "com.needgo.app",
+      "adaptiveIcon": {
+        "backgroundColor": "#EEF1EF",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "permissions": ["READ_MEDIA_IMAGES"],
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro"
+    },
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "İlan fotoğraflarını seçmek için galeri erişimi gerekir."
+        }
+      ],
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/splash-icon.png",
+          "resizeMode": "contain",
+          "backgroundColor": "#EEF1EF"
+        }
+      ]
+    ]
+  }
+}

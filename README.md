@@ -33,9 +33,30 @@ Supabase bağlantısı [src/lib/supabase.ts](src/lib/supabase.ts) içinde. URL v
 publishable (anon) anahtar Flutter sürümündeki `lib/supabase_client.dart` ile
 birebir aynıdır. Farklı bir ortam için buradaki iki sabiti değiştir.
 
-Uygulama; `ilanlar`, `konusmalar`, `mesajlar` tabloları, `ilan-fotograflari`
-storage bucket'ı ve `alinan_esya_sayisi` / `kota_yenilenme_tarihi` RPC
-fonksiyonlarını bekler (kota RPC'leri yoksa kota "boş" kabul edilir).
+Uygulama; `ilanlar`, `konusmalar`, `mesajlar` tabloları ve `ilan-fotograflari`
+storage bucket'ını bekler.
+
+### Güvenlik (RLS) — yayına çıkmadan önce zorunlu
+
+[supabase/guvenlik.sql](supabase/guvenlik.sql) dosyasını Supabase paneli >
+**SQL Editor** içinde bir kez çalıştır. Bu dosya:
+
+- `ilanlar` / `konusmalar` / `mesajlar` tablolarında RLS'i açar ve politikaları kurar,
+- `ilan-fotograflari` bucket'ı için storage politikalarını kurar,
+- sayaç RPC'lerini (`ilan_goruntulendi`, `ilan_begenildi`) ve kota RPC'lerini
+  (`alinan_esya_sayisi`, `kota_yenilenme_tarihi`) + kota tetikleyicisini oluşturur,
+- kişisel veri sızıntısı olan `ilanlar.kullanici_email` sütununu kaldırır,
+- **şifreli `profiller` tablosunu** (pgcrypto + Vault anahtarı) ve
+  `profil_getir` / `profil_kaydet` RPC'lerini oluşturur; eski `user_metadata`
+  profillerini bu tabloya taşıyıp düz metin kopyaları siler,
+- **`hesap_sil` RPC'sini** oluşturur (uygulama içi hesap silme — mağaza zorunluluğu).
+
+Profil alanları (ad, soyad, telefon, adres, iletişim e-postası) artık
+`user_metadata`'da değil; şifreli olarak `profiller` tablosunda tutulur ve
+yalnızca `profil_getir` RPC'si içinde, ilgili kullanıcı için çözülür.
+
+Anon key gizli değildir (uygulama paketinden çıkarılabilir); veritabanını
+koruyan tek şey bu RLS politikalarıdır.
 
 ## Proje yapısı
 
@@ -48,7 +69,7 @@ fonksiyonlarını bekler (kota RPC'leri yoksa kota "boş" kabul edilir).
 | [src/components/UI.tsx](src/components/UI.tsx) | `TextField` / `ElevatedButton` / `OutlinedButton` | Ortak girdi & buton bileşenleri |
 | [src/lib/supabase.ts](src/lib/supabase.ts) | `supabase_client.dart` | Supabase istemcisi (AsyncStorage oturumu) |
 | [src/lib/auth.ts](src/lib/auth.ts) | `onAuthStateChange` aboneliği | `useAuth()` hook'u |
-| [src/lib/profilKontrol.ts](src/lib/profilKontrol.ts) | `profil_kontrol.dart` | `profilTamMi()` |
+| [src/lib/profil.ts](src/lib/profil.ts) | `profil_kontrol.dart` | Şifreli profil: `profilGetir()` / `profilKaydet()` / `profilTamMi()` / `hesabiSil()` |
 | [src/lib/kota.ts](src/lib/kota.ts) | `kota.dart` | 30 günlük alma kotası |
 | [src/lib/mesajDeposu.ts](src/lib/mesajDeposu.ts) | `mesaj_deposu.dart` | Okunmamış mesaj sayacı (AsyncStorage) |
 | [src/screens/AnaSayfa.tsx](src/screens/AnaSayfa.tsx) | `main.dart` (`AnaSayfa`) | Başlık, bildirim zili, hesap menüsü, FAB |

@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NeedGO — Gizlilik Politikası</title>
+<style>
+  :root { color-scheme: light dark; }
+  body {
+    max-width: 720px; margin: 0 auto; padding: 32px 20px 80px;
+    font: 16px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: #1a1a1a; background: #fff;
+  }
+  @media (prefers-color-scheme: dark) {
+    body { color: #e6e6e6; background: #141414; }
+    a { color: #7db3ff; }
+    code { background: #2a2a2a; }
+  }
+  h1 { font-size: 1.7rem; margin-bottom: 4px; }
+  h2 { font-size: 1.2rem; margin-top: 2.2em; }
+  .meta { color: #888; font-size: 0.9rem; margin-bottom: 2em; }
+  .doldur { background: #fff3cd; color: #664d03; padding: 1px 6px; border-radius: 4px; }
+  @media (prefers-color-scheme: dark) { .doldur { background: #4d3800; color: #ffe08a; } }
+  code { background: #f0f0f0; padding: 1px 5px; border-radius: 4px; font-size: 0.9em; }
+  table { border-collapse: collapse; width: 100%; margin: 1em 0; font-size: 0.95rem; }
+  th, td { border: 1px solid #ccc; padding: 8px 10px; text-align: left; vertical-align: top; }
+  @media (prefers-color-scheme: dark) { th, td { border-color: #444; } }
+  ul { padding-left: 1.3em; }
+</style>
+</head>
+<body>
+
+<h1>NeedGO Gizlilik Politikası</h1>
+<p class="meta">
+  Son güncelleme: <span class="doldur">[GG.AA.YYYY]</span> &middot;
+  Yürürlük tarihi: <span class="doldur">[GG.AA.YYYY]</span>
+</p>
+
+<p>
+  Bu politika, <strong>NeedGO</strong> mobil uygulamasını ("Uygulama") kullandığınızda
+  kişisel verilerinizin nasıl işlendiğini açıklar. NeedGO, kullanıcıların ihtiyaç
+  fazlası eşyalarını ücretsiz olarak paylaşmasını sağlayan bir platformdur.
+</p>
+
+<h2>1. Veri Sorumlusu</h2>
+<p>
+  <span class="doldur">[Ad Soyad veya Şirket Unvanı]</span><br>
+  Adres: <span class="doldur">[Açık adres]</span><br>
+  E-posta: <span class="doldur">[iletisim@ornek.com]</span>
+</p>
+
+<h2>2. İşlediğimiz Kişisel Veriler</h2>
+<table>
+  <tr><th>Kategori</th><th>Veriler</th><th>Nasıl saklanır</th></tr>
+  <tr>
+    <td>Hesap</td>
+    <td>Giriş e-posta adresi, parola</td>
+    <td>Parola yalnızca geri döndürülemez şekilde şifrelenmiş özet (hash) olarak saklanır; düz metin parola tutulmaz.</td>
+  </tr>
+  <tr>
+    <td>Profil</td>
+    <td>Ad, soyad, telefon numarası, adres, iletişim e-postası</td>
+    <td>Veritabanında <strong>şifrelenerek</strong> saklanır ve yalnızca ilgili kullanıcının kendi hesabına gösterilir.</td>
+  </tr>
+  <tr>
+    <td>İlan içeriği</td>
+    <td>İlan başlığı, açıklaması, kategorisi, konum (ilçe/semt), ilan fotoğrafları</td>
+    <td>Uygulamada tüm kullanıcılara açık şekilde yayınlanır.</td>
+  </tr>
+  <tr>
+    <td>İletişim</td>
+    <td>Kullanıcılar arası konuşma ve mesaj içerikleri</td>
+    <td>Yalnızca konuşmanın iki tarafına gösterilir.</td>
+  </tr>
+  <tr>
+    <td>Kullanım</td>
+    <td>İlan görüntülenme/beğeni sayıları, 30 günlük eşya alma kotası kayıtları</td>
+    <td>Kötüye kullanımı önlemek için tutulur.</td>
+  </tr>
+  <tr>
+    <td>Teknik</td>
+    <td>Uygulama sürümü, cihaz türü, hata ve erişim günlükleri</td>
+    <td>Altyapı sağlayıcımız (Supabase) tarafında sınırlı süre tutulur.</td>
+  </tr>
+</table>
+
+<h2>3. Verilerin Toplanma Yöntemi</h2>
+<p>
+  Kişisel verileriniz, Uygulamayı kullanırken doğrudan sizin tarafınızdan girilir
+  (kayıt olurken, profilinizi doldururken, ilan verirken, mesajlaşırken). Üçüncü
+  taraflardan veri toplamıyoruz.
+</p>
+
+<h2>4. İşleme Amaçları ve Hukuki Sebepler</h2>
+<p>Verileriniz, KVKK m.5 ve (uygulanabilir olduğunda) GDPR m.6 kapsamında şu sebeplere dayanılarak işlenir:</p>
+<table>
+  <tr><th>Amaç</th><th>Hukuki sebep</th></tr>
+  <tr><td>Hesap oluşturma ve kimlik doğrulama</td><td>Sözleşmenin kurulması ve ifası</td></tr>
+  <tr><td>İlan yayınlama ve kullanıcıları eşleştirme</td><td>Sözleşmenin ifası</td></tr>
+  <tr><td>Kullanıcılar arası mesajlaşma</td><td>Sözleşmenin ifası</td></tr>
+  <tr><td>Kota uygulaması ve kötüye kullanımın önlenmesi</td><td>Meşru menfaat</td></tr>
+  <tr><td>Telefon ve açık adres bilgisinin işlenmesi</td><td>Açık rıza (profili kaydederken verilir; profili silerek geri çekebilirsiniz)</td></tr>
+  <tr><td>Yasal taleplere yanıt verme</td><td>Hukuki yükümlülük</td></tr>
+</table>
+
+<h2>5. Verilerin Aktarımı</h2>
+<ul>
+  <li>
+    <strong>Altyapı sağlayıcı:</strong> Veritabanı, kimlik doğrulama ve dosya
+    depolama hizmetleri <strong>Supabase</strong> üzerinden alınır. Sunucular
+    <span class="doldur">[bölge — ör. Avrupa Birliği / Frankfurt]</span> bölgesinde bulunur.
+  </li>
+  <li>
+    <strong>Yurt dışına aktarım:</strong> Sunucular Türkiye dışındaysa, verileriniz
+    yalnızca bu hizmetin sağlanması amacıyla ve açık rızanıza dayanılarak yurt dışına aktarılır.
+  </li>
+  <li>
+    <strong>Diğer kullanıcılar:</strong> Bir ilan yayınladığınızda ilan içeriğiniz
+    tüm kullanıcılara görünür. Bir kullanıcıyla mesajlaştığınızda karşı tarafa
+    yalnızca giriş e-posta adresiniz iletilir. Ad, telefon ve adres bilgileriniz
+    diğer kullanıcılara gösterilmez.
+  </li>
+  <li><strong>Reklam veya analitik amaçlı üçüncü taraf paylaşımı yapılmaz.</strong></li>
+</ul>
+
+<h2>6. Saklama Süreleri</h2>
+<ul>
+  <li>Hesap ve profil verileri, hesabınız aktif olduğu sürece saklanır.</li>
+  <li>
+    Hesabınızı sildiğinizde ilanlarınız, mesajlarınız, fotoğraflarınız, profiliniz
+    ve hesap kaydınız <strong>derhal ve kalıcı olarak</strong> silinir; yedeklerdeki
+    kopyalar en geç <span class="doldur">[30]</span> gün içinde silinir.
+  </li>
+  <li>Hata/erişim günlükleri en fazla <span class="doldur">[90]</span> gün tutulur.</li>
+</ul>
+
+<h2>7. Veri Güvenliği</h2>
+<ul>
+  <li>Parolalar geri döndürülemez şekilde hash'lenir.</li>
+  <li>Tüm veri iletişimi TLS ile şifrelenir.</li>
+  <li>Profil alanları (ad, soyad, telefon, adres, iletişim e-postası) veritabanında şifreli saklanır.</li>
+  <li>Satır bazlı erişim denetimi (Row Level Security) ile her kullanıcı yalnızca kendi verisine ve kendisine açık içeriğe erişebilir.</li>
+</ul>
+
+<h2>8. Haklarınız</h2>
+<p>KVKK m.11 ve GDPR kapsamında şu haklara sahipsiniz:</p>
+<ul>
+  <li>Kişisel verilerinizin işlenip işlenmediğini öğrenme ve bunlara erişme</li>
+  <li>Eksik veya yanlış verilerin düzeltilmesini isteme</li>
+  <li>Verilerinizin silinmesini isteme</li>
+  <li>İşlemeye itiraz etme ve açık rızanızı geri çekme</li>
+  <li>Verilerinizin taşınabilir bir formatta size verilmesini isteme</li>
+</ul>
+<p>
+  Bu haklarınızı kullanmak için <span class="doldur">[iletisim@ornek.com]</span>
+  adresine başvurabilirsiniz. Başvurularınız en geç 30 gün içinde yanıtlanır.
+</p>
+
+<h2>9. Hesabınızı ve Verilerinizi Silme</h2>
+<p>
+  Uygulama içinden <strong>Profil &rarr; Hesabımı sil</strong> adımını izleyerek
+  hesabınızı ve tüm verilerinizi kalıcı olarak silebilirsiniz. Alternatif olarak
+  <span class="doldur">[iletisim@ornek.com]</span> adresine silme talebi gönderebilirsiniz.
+</p>
+
+<h2>10. Çocukların Gizliliği</h2>
+<p>
+  NeedGO 18 yaşın altındaki kişilere yönelik değildir ve bilerek 18 yaş altı
+  kullanıcılardan veri toplamaz.
+</p>
+
+<h2>11. Çerezler</h2>
+<p>
+  Mobil uygulamada çerez kullanılmaz. Oturumunuzu açık tutmak için gereken kimlik
+  bilgisi yalnızca cihazınızda saklanır.
+</p>
+
+<h2>12. Değişiklikler</h2>
+<p>
+  Bu politika zaman zaman güncellenebilir. Önemli değişikliklerde Uygulama
+  üzerinden bilgilendirilirsiniz. Güncel sürüm her zaman bu sayfada yayınlanır.
+</p>
+
+<h2>13. İletişim</h2>
+<p>
+  Sorularınız için: <span class="doldur">[iletisim@ornek.com]</span>
+</p>
+
+</body>
+</html>

@@ -11,7 +11,8 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.needgo.app",
       "infoPlist": {
-        "NSPhotoLibraryUsageDescription": "İlan fotoğraflarını seçmek için galeri erişimi gerekir."
+        "NSPhotoLibraryUsageDescription": "İlan fotoğraflarını seçmek için galeri erişimi gerekir.",
+        "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {

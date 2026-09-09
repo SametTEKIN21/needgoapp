@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
-import { View, Text, ScrollView, StyleSheet } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, Alert } from 'react-native';
 import type { User } from '@supabase/supabase-js';
 import { supabase } from '../lib/supabase';
+import { profilGetir, profilKaydet, hesabiSil } from '../lib/profil';
 import { kotaDurumu, tarihMetni, aylikAlmaHakki, KotaDurumu } from '../lib/kota';
 import { renkZemin, renkKart, renkInk, renkOrman, renkCizgi, renkHata, saydam } from '../tema';
 import { Girdi, DugmeDolu, DugmeCizgili, Yukleniyor } from '../components/UI';
@@ -34,6 +35,7 @@ export default function Profil({ navigation }: EkranProps<'Profil'>) {
   );
   const [kayitli, setKayitli] = useState<Form | null>(null);
   const [kaydediliyor, setKaydediliyor] = useState(false);
+  const [siliniyor, setSiliniyor] = useState(false);
   const [hata, setHata] = useState('');
   const [kota, setKota] = useState<KotaDurumu | null>(null);
 
@@ -42,11 +44,11 @@ export default function Profil({ navigation }: EkranProps<'Profil'>) {
       const { data } = await supabase.auth.getUser();
       const user = data.user;
       setKullanici(user);
-      const m = (user?.user_metadata ?? {}) as Record<string, unknown>;
 
+      const p = await profilGetir();
       const yeni: Form = {};
       for (const a of ALANLAR) {
-        let deger = (m[a.anahtar] as string) ?? '';
+        let deger = (p as unknown as Record<string, string>)[a.anahtar] ?? '';
         if (a.anahtar === 'iletisim_eposta' && deger === '') deger = user?.email ?? '';
         yeni[a.anahtar] = deger;
       }
@@ -84,13 +86,42 @@ export default function Profil({ navigation }: EkranProps<'Profil'>) {
 
     setKaydediliyor(true);
     try {
-      const { error } = await supabase.auth.updateUser({ data: temiz });
-      if (error) throw error;
+      await profilKaydet({
+        ad: temiz.ad,
+        soyad: temiz.soyad,
+        telefon: temiz.telefon,
+        adres: temiz.adres,
+        iletisim_eposta: temiz.iletisim_eposta,
+      });
       navigation.goBack();
     } catch (e) {
       setKaydediliyor(false);
       setHata(`Kaydedilemedi: ${e}`);
     }
+  };
+
+  const hesabiSilOnay = () => {
+    Alert.alert(
+      'Hesabımı sil',
+      'Hesabın ve tüm verilerin (ilanların, mesajların, fotoğrafların) kalıcı olarak silinecek. Bu işlem geri alınamaz.',
+      [
+        { text: 'Vazgeç', style: 'cancel' },
+        {
+          text: 'Hesabımı sil',
+          style: 'destructive',
+          onPress: async () => {
+            setSiliniyor(true);
+            try {
+              await hesabiSil();
+              navigation.reset({ index: 0, routes: [{ name: 'AnaSayfa' }] });
+            } catch (e) {
+              setSiliniyor(false);
+              Alert.alert('Silinemedi', `Bir hata oluştu: ${e}`);
+            }
+          },
+        },
+      ]
+    );
   };
 
   if (!kontrolBitti) {
@@ -177,6 +208,22 @@ export default function Profil({ navigation }: EkranProps<'Profil'>) {
             </View>
           </View>
         )}
+
+        <View style={styles.tehlikeKart}>
+          <Text style={styles.tehlikeBaslik}>Hesabı sil</Text>
+          <Text style={styles.tehlikeMetin}>
+            Hesabın ve tüm verilerin (ilanların, mesajların, fotoğrafların) kalıcı
+            olarak silinir. Bu işlem geri alınamaz.
+          </Text>
+          <DugmeCizgili
+            metin={siliniyor ? 'Siliniyor…' : 'Hesabımı sil'}
+            kenarRengi={renkHata}
+            yaziRengi={renkHata}
+            onPress={hesabiSilOnay}
+            pasif={siliniyor}
+            style={{ alignSelf: 'flex-start', marginTop: 12 }}
+          />
+        </View>
       </ScrollView>
     </View>
   );
@@ -266,6 +313,17 @@ const styles = StyleSheet.create({
   kotaBaslik: { fontSize: 15, fontWeight: '600', color: renkInk },
   kotaMetin: { marginTop: 4, fontSize: 13, color: saydam(renkInk, 0.7) },
   kotaAlt: { marginTop: 4, fontSize: 11, color: saydam(renkInk, 0.45) },
+
+  tehlikeKart: {
+    backgroundColor: renkKart,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: saydam(renkHata, 0.4),
+    padding: 16,
+    marginTop: 4,
+  },
+  tehlikeBaslik: { fontSize: 15, fontWeight: '600', color: renkHata, marginBottom: 6 },
+  tehlikeMetin: { fontSize: 12, color: saydam(renkInk, 0.6), lineHeight: 17 },
 
   ozetKart: {
     backgroundColor: renkKart,

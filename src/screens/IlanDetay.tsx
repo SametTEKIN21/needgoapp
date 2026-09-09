@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import { supabase } from '../lib/supabase';
 import { kotaDurumu, tarihMetni, KotaDurumu } from '../lib/kota';
-import { profilTamMi } from '../lib/profilKontrol';
+import { profilTamMi } from '../lib/profil';
 import {
   renkZemin,
   renkInk,
@@ -77,8 +77,9 @@ export default function IlanDetay({ route, navigation }: EkranProps<'IlanDetay'>
 
       if (!sayacArtirildi.current) {
         sayacArtirildi.current = true;
-        const yeni = ((veri.goruntulenme_sayisi as number | null) ?? 0) + 1;
-        await supabase.from('ilanlar').update({ goruntulenme_sayisi: yeni }).eq('id', ilanId);
+        // Sayaç, ilan sahibi olmayanlar da artırabilsin diye RPC ile güncellenir
+        // (ilanlar tablosunda UPDATE yetkisi yalnızca sahibinde).
+        await supabase.rpc('ilan_goruntulendi', { p_ilan_id: ilanId });
       }
     } catch {
       setYukleniyor(false);
@@ -103,7 +104,8 @@ export default function IlanDetay({ route, navigation }: EkranProps<'IlanDetay'>
     if (!ilan || begenildi) return;
     const yeni = ((ilan.begeni_sayisi as number | null) ?? 0) + 1;
     try {
-      await supabase.from('ilanlar').update({ begeni_sayisi: yeni }).eq('id', ilanId);
+      const { error } = await supabase.rpc('ilan_begenildi', { p_ilan_id: ilanId });
+      if (error) throw error;
       setIlan({ ...ilan, begeni_sayisi: yeni });
       setBegenildi(true);
     } catch {
@@ -133,7 +135,7 @@ export default function IlanDetay({ route, navigation }: EkranProps<'IlanDetay'>
       return;
     }
 
-    if (!profilTamMi(kullanici)) {
+    if (!(await profilTamMi())) {
       setMesajIslemde(false);
       navigation.navigate('Profil');
       return;
@@ -330,10 +332,8 @@ function MesajBolumu({
   const [profilTam, setProfilTam] = useState(false);
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => {
-      setKullaniciId(data.user?.id ?? null);
-      setProfilTam(profilTamMi(data.user));
-    });
+    supabase.auth.getUser().then(({ data }) => setKullaniciId(data.user?.id ?? null));
+    profilTamMi().then(setProfilTam);
   }, []);
 
   if (kullaniciId === undefined) return null;

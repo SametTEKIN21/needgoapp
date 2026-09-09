@@ -95,7 +95,6 @@ export default function IlanVer({ navigation }: EkranProps<'IlanVer'>) {
         kategori: kategori.trim(),
         konum: konum.trim(),
         user_id: kullanici.id,
-        kullanici_email: kullanici.email,
         fotograf_url: yuklenenUrller.length > 0 ? yuklenenUrller[0] : null,
         fotograflar: yuklenenUrller,
       });

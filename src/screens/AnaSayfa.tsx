@@ -10,7 +10,7 @@ import {
 import { useFocusEffect } from '@react-navigation/native';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../lib/auth';
-import { profilTamMi } from '../lib/profilKontrol';
+import { profilTamMi } from '../lib/profil';
 import { okunmamisMesajSayisi, mesajlariGorulduIsaretle } from '../lib/mesajDeposu';
 import {
   renkZemin,
@@ -64,7 +64,7 @@ export default function AnaSayfa({ navigation }: EkranProps<'AnaSayfa'>) {
       girisEkraniniAc();
       return;
     }
-    if (!profilTamMi(data.user)) {
+    if (!(await profilTamMi())) {
       navigation.navigate('Profil');
       return;
     }

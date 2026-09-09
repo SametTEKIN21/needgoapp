@@ -36,10 +36,22 @@ birebir aynıdır. Farklı bir ortam için buradaki iki sabiti değiştir.
 Uygulama; `ilanlar`, `konusmalar`, `mesajlar` tabloları ve `ilan-fotograflari`
 storage bucket'ını bekler.
 
+### Web ile ortak backend — TEK KAYNAK
+
+Bu uygulama, web istemcisi (`github.com/SametTEKIN21/needgo`, needgo.com.tr) ile
+**aynı Supabase projesini** kullanır. Kurallar tek yerde tutulur:
+
+- **RLS + şema:** `supabase/guvenlik-v2.sql` — bu dosya **her iki repoda birebir aynıdır**.
+  DB'de bir değişiklik gerekiyorsa dosyayı güncelle, iki repoya da kopyala, Supabase'de çalıştır.
+- **İş kuralları** (kota limiti, zorunlu profil alanları): DB'deki `uygulama_ayarlari`
+  tablosu → `uygulama_ayarlari()` RPC. İki app de oradan okur (fallback sabitleriyle).
+- **Admin:** `adminler` tablosu + `admin_mi()`.
+- **Fotoğraf moderasyonu:** `https://www.needgo.com.tr/api/moderasyon` (ortak endpoint).
+
 ### Güvenlik (RLS) — yayına çıkmadan önce zorunlu
 
-[supabase/guvenlik.sql](supabase/guvenlik.sql) dosyasını Supabase paneli >
-**SQL Editor** içinde bir kez çalıştır. Bu dosya:
+Güncel dosya: **`supabase/guvenlik-v2.sql`** (`guvenlik.sql` eskidir, v2 onun yerini alır).
+Supabase paneli > **SQL Editor** içinde bir kez çalıştır. `guvenlik.sql` şunları yapar:
 
 - `ilanlar` / `konusmalar` / `mesajlar` tablolarında RLS'i açar ve politikaları kurar,
 - `ilan-fotograflari` bucket'ı için storage politikalarını kurar,

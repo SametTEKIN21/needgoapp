@@ -119,11 +119,21 @@ export default function IlanListesi({ onIlanPress }: Props) {
   const ilanlariGetir = useCallback(async () => {
     setHata('');
     try {
-      const { data, error } = await supabase
+      let { data, error } = await supabase
         .from('ilanlar')
         .select()
         .eq('durum', 'aktif')
+        .eq('moderasyon_durumu', 'onaylandi')
         .order('olusturulma_tarihi', { ascending: false });
+
+      // moderasyon sütunu yoksa eski davranışa düş
+      if (error && /moderasyon_durumu/.test(error.message ?? '')) {
+        ({ data, error } = await supabase
+          .from('ilanlar')
+          .select()
+          .eq('durum', 'aktif')
+          .order('olusturulma_tarihi', { ascending: false }));
+      }
       if (error) throw error;
       setIlanlar((data ?? []) as Ilan[]);
     } catch (e) {

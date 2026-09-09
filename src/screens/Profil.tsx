@@ -4,7 +4,7 @@ import type { User } from '@supabase/supabase-js';
 import { supabase } from '../lib/supabase';
 import { GIZLILIK_URL } from '../lib/sabitler';
 import { profilGetir, profilKaydet, hesabiSil } from '../lib/profil';
-import { kotaDurumu, tarihMetni, aylikAlmaHakki, KotaDurumu } from '../lib/kota';
+import { kotaDurumu, tarihMetni, KotaDurumu } from '../lib/kota';
 import { renkZemin, renkKart, renkInk, renkOrman, renkCizgi, renkHata, saydam } from '../tema';
 import { Girdi, DugmeDolu, DugmeCizgili, Yukleniyor } from '../components/UI';
 import Baslik from '../components/Baslik';
@@ -239,7 +239,7 @@ function KotaKarti({ kota }: { kota: KotaDurumu }) {
     <View style={styles.karti}>
       <Text style={styles.kotaBaslik}>Eşya alma hakkın</Text>
       <Text style={styles.kotaMetin}>
-        Son 30 günde {kota.alinan} eşya aldın · kalan hakkın {kota.kalan}/{aylikAlmaHakki}
+        Son 30 günde {kota.alinan} eşya aldın · kalan hakkın {kota.kalan}/{kota.limit}
       </Text>
       {kota.kalan === 0 && kota.yenilenmeTarihi && (
         <Text style={styles.kotaAlt}>
@@ -247,7 +247,7 @@ function KotaKarti({ kota }: { kota: KotaDurumu }) {
         </Text>
       )}
       <Text style={styles.kotaAlt}>
-        Fırsatçılığı önlemek için her hesap 30 günde en fazla {aylikAlmaHakki} eşya alabilir.
+        Fırsatçılığı önlemek için her hesap 30 günde en fazla {kota.limit} eşya alabilir.
       </Text>
     </View>
   );

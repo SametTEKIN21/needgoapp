@@ -121,9 +121,10 @@ export default function Ilanlarim(_props: EkranProps<'Ilanlarim'>) {
         if (!benzersiz.has(gid)) benzersiz.set(gid, (k as any).gonderen_email ?? null);
       }
 
+      const hak = await aylikAlmaHakki();
       const liste: Aday[] = [];
       for (const [gid, eposta] of benzersiz) {
-        const dolu = (await alinanEsyaSayisi(gid)) >= aylikAlmaHakki;
+        const dolu = (await alinanEsyaSayisi(gid)) >= hak;
         liste.push({ gonderenId: gid, gonderenEposta: eposta, kotaDolu: dolu });
       }
       setAdaylar(liste);

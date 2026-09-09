@@ -11,6 +11,7 @@ import {
 import * as ImagePicker from 'expo-image-picker';
 import { decode } from 'base64-arraybuffer';
 import { supabase } from '../lib/supabase';
+import { MODERASYON_API } from '../lib/sabitler';
 import { renkZemin, renkInk, renkOcre, renkCizgi, renkHata } from '../tema';
 import { Girdi, DugmeDolu } from '../components/UI';
 import Baslik from '../components/Baslik';
@@ -89,18 +90,61 @@ export default function IlanVer({ navigation }: EkranProps<'IlanVer'>) {
         yuklenenUrller.push(pub.publicUrl);
       }
 
-      const { error } = await supabase.from('ilanlar').insert({
-        baslik: bas,
-        aciklama: aciklama.trim(),
-        kategori: kategori.trim(),
-        konum: konum.trim(),
-        user_id: kullanici.id,
-        fotograf_url: yuklenenUrller.length > 0 ? yuklenenUrller[0] : null,
-        fotograflar: yuklenenUrller,
-      });
+      const { data: yeni, error } = await supabase
+        .from('ilanlar')
+        .insert({
+          baslik: bas,
+          aciklama: aciklama.trim(),
+          kategori: kategori.trim(),
+          konum: konum.trim(),
+          user_id: kullanici.id,
+          kullanici_email: kullanici.email,
+          fotograf_url: yuklenenUrller.length > 0 ? yuklenenUrller[0] : null,
+          fotograflar: yuklenenUrller,
+        })
+        .select('id')
+        .single();
       if (error) throw error;
 
-      navigation.goBack();
+      // Fotoğrafları otomatik moderasyondan geçir (web ile ortak endpoint).
+      // Başarısız olursa ilan 'beklemede' kalır → admin onayına düşer.
+      let durum: 'onaylandi' | 'beklemede' | 'reddedildi' = 'beklemede';
+      let not: string | null = null;
+      try {
+        const { data: oturum } = await supabase.auth.getSession();
+        const yanit = await fetch(MODERASYON_API, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${oturum.session?.access_token ?? ''}`,
+          },
+          body: JSON.stringify({ ilanId: yeni.id }),
+        });
+        if (yanit.ok) {
+          const sonuc = await yanit.json();
+          durum = sonuc.durum ?? 'beklemede';
+          not = sonuc.not ?? null;
+        }
+      } catch {
+        // moderasyon isteği başarısız — ilan 'beklemede' kalır
+      }
+
+      setYukleniyor(false);
+      Alert.alert(
+        durum === 'onaylandi'
+          ? 'İlanın yayında!'
+          : durum === 'reddedildi'
+            ? 'İlan yayınlanamadı'
+            : 'İlanın incelemeye alındı',
+        durum === 'onaylandi'
+          ? 'Fotoğraflar otomatik kontrolden geçti, ilanın yayınlandı.'
+          : durum === 'reddedildi'
+            ? not ?? 'Fotoğraflar içerik kurallarına uymuyor.'
+            : (not ? not + ' ' : '') +
+              'Ekibimiz kısa sürede kontrol edip yayınlayacak. Durumu "İlanlarım"dan takip edebilirsin.',
+        [{ text: 'Tamam', onPress: () => navigation.goBack() }]
+      );
+      return;
     } catch (e) {
       Alert.alert('Hata', `Bir hata oluştu: ${e}`);
     } finally {

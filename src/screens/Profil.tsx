@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
-import { View, Text, ScrollView, StyleSheet, Alert } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, Alert, Linking, Pressable } from 'react-native';
 import type { User } from '@supabase/supabase-js';
 import { supabase } from '../lib/supabase';
+import { GIZLILIK_URL } from '../lib/sabitler';
 import { profilGetir, profilKaydet, hesabiSil } from '../lib/profil';
 import { kotaDurumu, tarihMetni, aylikAlmaHakki, KotaDurumu } from '../lib/kota';
 import { renkZemin, renkKart, renkInk, renkOrman, renkCizgi, renkHata, saydam } from '../tema';
@@ -209,6 +210,10 @@ export default function Profil({ navigation }: EkranProps<'Profil'>) {
           </View>
         )}
 
+        <Pressable style={styles.gizlilikSatir} onPress={() => Linking.openURL(GIZLILIK_URL)}>
+          <Text style={styles.gizlilikYazi}>Gizlilik Bildirimi</Text>
+        </Pressable>
+
         <View style={styles.tehlikeKart}>
           <Text style={styles.tehlikeBaslik}>Hesabı sil</Text>
           <Text style={styles.tehlikeMetin}>
@@ -324,6 +329,9 @@ const styles = StyleSheet.create({
   },
   tehlikeBaslik: { fontSize: 15, fontWeight: '600', color: renkHata, marginBottom: 6 },
   tehlikeMetin: { fontSize: 12, color: saydam(renkInk, 0.6), lineHeight: 17 },
+
+  gizlilikSatir: { alignSelf: 'center', paddingVertical: 10, marginBottom: 8 },
+  gizlilikYazi: { color: renkOrman, fontSize: 13, textDecorationLine: 'underline' },
 
   ozetKart: {
     backgroundColor: renkKart,

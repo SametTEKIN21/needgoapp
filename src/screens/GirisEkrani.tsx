@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { View, Text, ScrollView, Pressable, StyleSheet } from 'react-native';
+import { View, Text, ScrollView, Pressable, StyleSheet, Linking } from 'react-native';
 import { supabase } from '../lib/supabase';
-import { renkZemin, renkInk, renkOrman, renkOcre, renkHata } from '../tema';
+import { GIZLILIK_URL } from '../lib/sabitler';
+import { renkZemin, renkInk, renkOrman, renkOcre, renkHata, renkCizgi } from '../tema';
 import { Girdi, DugmeDolu } from '../components/UI';
 import Baslik from '../components/Baslik';
 import NeedGoYazi from '../components/NeedGoYazi';
@@ -27,16 +28,24 @@ export default function GirisEkrani({ navigation }: EkranProps<'Giris'>) {
   const [yukleniyor, setYukleniyor] = useState(false);
   const [hata, setHata] = useState('');
   const [mesaj, setMesaj] = useState('');
+  const [kvkkOnay, setKvkkOnay] = useState(false);
 
   const modDegistir = (m: Mod) => {
     setMod(m);
     setHata('');
     setMesaj('');
+    setKvkkOnay(false);
   };
 
   const gonder = async () => {
     setHata('');
     setMesaj('');
+
+    if (mod === 'kayit' && !kvkkOnay) {
+      setHata('Devam etmek için Gizlilik Bildirimi’ni onaylaman gerekiyor.');
+      return;
+    }
+
     setYukleniyor(true);
 
     const eposta = email.trim();
@@ -112,6 +121,20 @@ export default function GirisEkrani({ navigation }: EkranProps<'Giris'>) {
           </Pressable>
         )}
 
+        {mod === 'kayit' && (
+          <Pressable style={styles.kvkkSatir} onPress={() => setKvkkOnay((v) => !v)}>
+            <View style={[styles.kutu, kvkkOnay && styles.kutuDolu]}>
+              {kvkkOnay && <Text style={styles.kutuTik}>✓</Text>}
+            </View>
+            <Text style={styles.kvkkYazi}>
+              <Text style={styles.kvkkLink} onPress={() => Linking.openURL(GIZLILIK_URL)}>
+                Gizlilik Bildirimi
+              </Text>
+              ’ni okudum, kişisel verilerimin işlenmesini kabul ediyorum.
+            </Text>
+          </Pressable>
+        )}
+
         {!!hata && <Text style={styles.hata}>{hata}</Text>}
         {!!mesaj && <Text style={styles.mesaj}>{mesaj}</Text>}
 
@@ -119,7 +142,7 @@ export default function GirisEkrani({ navigation }: EkranProps<'Giris'>) {
         <DugmeDolu
           metin={butonMetni}
           onPress={gonder}
-          pasif={yukleniyor}
+          pasif={yukleniyor || (mod === 'kayit' && !kvkkOnay)}
           arkaPlan={renkOcre}
         />
 
@@ -149,6 +172,21 @@ const styles = StyleSheet.create({
   icerik: { padding: 24 },
   sifremiUnuttum: { alignSelf: 'flex-end', paddingVertical: 8 },
   sifremiUnuttumYazi: { color: renkInk, fontSize: 12 },
+  kvkkSatir: { flexDirection: 'row', alignItems: 'flex-start', gap: 10, marginTop: 14 },
+  kutu: {
+    width: 22,
+    height: 22,
+    borderRadius: 5,
+    borderWidth: 1.5,
+    borderColor: renkCizgi,
+    backgroundColor: '#FFFFFF',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  kutuDolu: { backgroundColor: renkOcre, borderColor: renkOcre },
+  kutuTik: { color: '#FFFFFF', fontSize: 13, fontWeight: '900', lineHeight: 16 },
+  kvkkYazi: { flex: 1, color: renkInk, fontSize: 12, lineHeight: 17 },
+  kvkkLink: { color: renkOrman, textDecorationLine: 'underline' },
   hata: { color: renkHata, fontSize: 12, marginTop: 8 },
   mesaj: { color: renkOrman, fontSize: 12, marginTop: 8 },
   altLink: { alignSelf: 'center', paddingVertical: 8 },

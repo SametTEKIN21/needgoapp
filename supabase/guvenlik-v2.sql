@@ -32,6 +32,10 @@ alter table public.konusmalar add column if not exists gonderen_email text;
 
 -- Şu ana kadar makine-moderasyonundan geçmemiş ilanları görünür tut
 -- (yeni RLS 'onaylandi' değilse gizler; mevcut ilanlar kaybolmasın).
+-- Not: moderasyon koruma tetikleyicisi SQL editöründe admin görmediği için bu
+-- update'i geri alır → önce tetikleyiciyi düşür, section 6'da yeniden kurulur.
+drop trigger if exists trg_moderasyon_koru on public.ilanlar;
+
 update public.ilanlar
    set moderasyon_durumu = 'onaylandi'
  where moderasyon_tarihi is null

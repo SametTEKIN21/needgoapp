@@ -23,7 +23,7 @@
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
-      "permissions": ["READ_MEDIA_IMAGES"],
+      "permissions": ["android.permission.READ_MEDIA_IMAGES"],
       "predictiveBackGestureEnabled": false
     },
     "web": {
@@ -34,7 +34,9 @@
       [
         "expo-image-picker",
         {
-          "photosPermission": "İlan fotoğraflarını seçmek için galeri erişimi gerekir."
+          "photosPermission": "İlan fotoğraflarını seçmek için galeri erişimi gerekir.",
+          "cameraPermission": false,
+          "microphonePermission": false
         }
       ],
       [
@@ -45,6 +47,12 @@
           "backgroundColor": "#EEF1EF"
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "facb6ac9-1acd-494d-aaaa-1392bee08a59"
+      }
+    },
+    "owner": "burak-tekin-bilgisayar-proglama-ve-yazilim"
   }
 }
